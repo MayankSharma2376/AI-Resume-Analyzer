@@ -1,52 +1,81 @@
-import React from 'react'
-import { Link } from 'react-router'
-import Scorecircle from './Scorecircle';
+import { Link } from "react-router";
+import ScoreCircle from "~/components/Scorecircle";
 
-interface Resume{
-  id: string;
-  companyName: string;
-  jobTitle?: string;
-  imagePath: string;
-  resumePath: string;
-  feedback?: {overallScore?: number}
+// Props type: expects a resume object
+const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imagePath } }: { resume: Resume }) => {
+    const getScoreColor = (score: number) => {
+        if (score >= 80) return "text-green-600";
+        if (score >= 60) return "text-yellow-600";
+        return "text-red-600";
+    };
+
+    const getScoreLabel = (score: number) => {
+        if (score >= 80) return "Excellent";
+        if (score >= 60) return "Good";
+        return "Needs Improvement";
+    };
+
+    return (
+        <Link 
+            to={`/resume/${id}`} 
+            className="resume-card group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+        >
+            {/* Header section: company name, job title, and score */}
+            <div className="resume-card-header">
+                <div className="flex flex-col gap-2 flex-1 min-w-0">
+                    {companyName && (
+                        <h2 className="text-xl font-bold text-gray-900 break-words group-hover:text-blue-600 transition-colors">
+                            {companyName}
+                        </h2>
+                    )}
+                    {jobTitle && (
+                        <h3 className="text-base text-gray-600 break-words">
+                            {jobTitle}
+                        </h3>
+                    )}
+                    {!companyName && !jobTitle && (
+                        <h2 className="text-xl font-bold text-gray-900">Resume</h2>
+                    )}
+                    <div className="mt-2">
+                        <span className={`text-sm font-medium ${getScoreColor(feedback.overallScore)}`}>
+                            {getScoreLabel(feedback.overallScore)}
+                        </span>
+                    </div>
+                </div>
+                {/* Display overall feedback score */}
+                <div className="flex-shrink-0">
+                    <ScoreCircle score={feedback.overallScore} />
+                </div>
+            </div>
+
+            {/* Resume image section */}
+            {imagePath && (
+                <div className="gradient-border overflow-hidden rounded-xl group-hover:shadow-inner transition-shadow duration-300">
+                    <img
+                        src={imagePath}
+                        alt={`Resume for ${companyName || jobTitle || 'position'}`}
+                        className="w-full max-h-[400px] object-contain transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    />
+                </div>
+            )}
+
+            {/* Footer with quick stats */}
+            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span className="flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Analyzed
+                    </span>
+                </div>
+                <div className="text-sm text-gray-500 group-hover:text-blue-600 transition-colors">
+                    View Details →
+                </div>
+            </div>
+        </Link>
+    );
 }
 
-const ResumeCard = ({resume}: {resume: Resume}) => {
-  const {id, companyName, jobTitle, imagePath, resumePath, feedback} = resume
-  return (
-    <Link to={`/resume/${resume.id}`} className='resume-card block bg-white rounded-xl shadow-md p-6 text-center hover:shadow-xl transition-shadow duration-100 animate-in fade-in duration-1000'>
-      <div className='resume-card-header'>
-        <div className='flex flex-col gap-2'>
-          {companyName && <h2 className='text-black font-bold break-words'>{companyName}</h2>}
-          {jobTitle && <h3 className='text-lg break-words text-gray-300'>{jobTitle}</h3>}
-          {companyName && jobTitle && <h2 className='text-black font-bold'></h2>}
-        </div>
-        <div className='flex-shrink-0'>
-          <Scorecircle score={feedback?.overallScore}/>
-        </div>
-
-      </div>
-
-      {imagePath && (
-        <div className='gradient-border animate-in fade-in duration-1000'>
-          <img src={imagePath} alt="resume" className='w-full max-h-[600px] object-contain' loading='lazy'style={{imageRendering: "auto"}}/>
-        </div>
-      )}
-        {/* <div className='flex flex-col gap2'>
-            <h2 className='text-black font-bold break-words'>{companyName}</h2>
-        </div>
-        <h3 className='text-xl font-semibold'>{jobTitle || "N/A"}</h3>
-        <div className='flex-shrink-0'>
-          <Scorecircle score={feedback?.overallScore ?? 0}/>
-        </div>
-        <div className='gradiennt-border animate-in fade-in duration-1000'>
-          <div className='w-full h-full'>
-            <img src={imagePath} alt='resume' className='w-fill h-[350px] max-sm:h-[200px] object-cover object-top'/>
-          </div>
-        </div> */}
-    </Link>
-
-  )
-}
-
-export default ResumeCard
+export default ResumeCard;
