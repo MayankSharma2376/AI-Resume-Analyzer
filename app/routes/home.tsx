@@ -6,6 +6,10 @@ import ResumeCard from "~/components/ResumeCard";
 import { usePuterStore } from "../../lib/puter";
 import { useNavigate } from "react-router";
 
+
+
+
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Resume AI Checker" },
@@ -27,6 +31,7 @@ export default function Home() {
   return (
     <main className="bg-[url('/images/bg-main.svg')] bg-cover bg-center bg-no-repeat min-h-screen">
       {/* Navbar */}
+      
       <div className="sticky top-0 z-50 backdrop-blur-sm bg-white/80 border-b border-gray-100">
         <div className="container mx-auto px-4 py-4">
           <Navbar />
