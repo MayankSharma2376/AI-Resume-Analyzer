@@ -287,7 +287,7 @@ export const usePuterStore = create<PuterStore>((set, get) => ({
             ],
           },
         ],
-        { model: "claude-sonnet-4" }
+        { model: "gpt-4.1-mini" }
       );
     },
     img2txt: async (image, testMode) => {
